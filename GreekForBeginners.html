@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Παρέα — Greek for family life</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Work+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --navy:#14324F; --navy-deep:#0E2439; --paper:#FAF8F3; --card:#FFFFFF;
+    --sea:#2E8FA3; --sea-soft:#E3F0F3; --honey:#C99B3F; --honey-soft:#F6EDDA;
+    --ink:#1E2A33; --grey:#6B7A85; --line:#E4E0D6; --good:#3E8E5A; --bad:#B04A3A;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;overflow-x:hidden}
+  body{background:var(--paper);color:var(--ink);font-family:'Work Sans',system-ui,sans-serif}
+  button{touch-action:manipulation;font-family:inherit}
+  a{touch-action:manipulation}
+  .didot{font-family:'GFS Didot',Georgia,serif}
+
+  header{background:linear-gradient(160deg,var(--navy),var(--navy-deep));color:var(--paper);padding:18px 16px 16px}
+  .head-inner{max-width:860px;margin:0 auto}
+  .head-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  h1{font-family:'GFS Didot',Georgia,serif;font-size:30px;margin:0;letter-spacing:2px}
+  .tagline{color:var(--honey);font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
+  .head-sub{display:none;color:#B9CBD8;font-size:14px;margin:10px 0 18px;max-width:560px;line-height:1.5}
+
+  nav.top-tabs{display:none;gap:4px;overflow-x:auto}
+  nav.top-tabs button{background:transparent;color:#B9CBD8;border:none;border-radius:10px 10px 0 0;padding:10px 16px 12px;cursor:pointer;font-weight:600;font-size:14px;white-space:nowrap}
+  nav.top-tabs button.active{background:var(--paper);color:var(--navy)}
+  nav.top-tabs .gr{font-family:'GFS Didot',Georgia,serif;font-size:16px;display:block}
+  nav.top-tabs .en{display:block;font-size:10px;font-weight:400;letter-spacing:.6px;text-transform:uppercase;opacity:.75}
+
+  main{max-width:860px;margin:0 auto;padding:18px 14px 110px}
+
+  nav.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--navy-deep);border-top:1px solid rgba(250,248,243,.12);display:flex;justify-content:space-around;padding:8px 4px calc(10px + env(safe-area-inset-bottom));z-index:50}
+  nav.bottom-nav button{background:transparent;border:none;cursor:pointer;color:#8FA6B6;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:56px;padding:4px 2px}
+  nav.bottom-nav button.active{color:var(--honey)}
+  nav.bottom-nav .icon{font-size:19px;line-height:1}
+  nav.bottom-nav .icon.gr{font-family:'GFS Didot',Georgia,serif;font-size:17px}
+  nav.bottom-nav .lbl{font-size:10px;font-weight:500;letter-spacing:.3px}
+  nav.bottom-nav button.active .lbl{font-weight:700}
+
+  @media(min-width:640px){
+    header{padding:28px 20px 0}
+    h1{font-size:44px}
+    .tagline{font-size:13px}
+    .head-sub{display:block}
+    nav.top-tabs{display:flex}
+    main{padding:24px 20px 64px}
+    nav.bottom-nav{display:none}
+  }
+
+  h2{font-family:'GFS Didot',Georgia,serif;font-size:24px;color:var(--navy);margin:6px 0 8px;font-weight:400}
+  .lead{color:var(--grey);font-size:14px;margin:0 0 18px;line-height:1.5}
+  .muted{color:var(--grey);font-size:13px}
+
+  .grid-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 12px;min-height:150px;cursor:pointer;display:flex;flex-direction:column;position:relative;box-shadow:0 1px 3px rgba(20,50,79,.06);transition:background .25s,color .25s}
+  .tile.learned{border-color:var(--sea);box-shadow:0 0 0 2px rgba(46,143,163,.2)}
+  .tile.flipped{background:var(--navy);color:var(--paper)}
+  .tile .big{font-family:'GFS Didot',Georgia,serif;font-size:44px;line-height:1;text-align:center;margin-top:10px;color:var(--navy)}
+  .tile .big .low{color:var(--sea)}
+  .tile .foot{text-align:center;margin-top:auto}
+  .tile .name{font-family:'GFS Didot',Georgia,serif;font-size:15px}
+  .tile .tr{font-size:11.5px;color:var(--grey)}
+  .tile .back{display:flex;flex-direction:column;height:100%;font-size:12.5px;line-height:1.45}
+  .tile .sound{font-weight:700;font-size:14px;color:var(--honey);margin-bottom:6px}
+  .tile .hint{margin-top:auto;font-size:10.5px;opacity:.6}
+  .tile .check{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);background:transparent;color:var(--grey);font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .tile.learned .check{background:var(--sea);border-color:var(--sea);color:#fff}
+
+  .grid-combos{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+  .combo{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:14px;align-items:center}
+  .combo .cg{font-family:'GFS Didot',Georgia,serif;font-size:30px;color:var(--navy);min-width:52px}
+  .combo .cs{font-weight:700;font-size:14px;color:var(--sea)}
+  .combo .ce{font-size:12.5px;color:var(--grey)}
+
+  .note-honey{background:var(--honey-soft);border:1px solid rgba(201,155,63,.27);border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.6;margin-top:20px}
+  .note-sea{font-size:13px;color:var(--grey);background:var(--sea-soft);border-radius:8px;padding:10px 12px;margin:0 0 12px;line-height:1.5}
+
+  .pill{background:transparent;color:var(--navy);border:1.5px solid var(--navy);border-radius:999px;padding:7px 16px;font-weight:600;font-size:13px;cursor:pointer}
+  .pill.active{background:var(--navy);color:var(--paper)}
+  .btn{background:var(--navy);color:var(--paper);border:none;border-radius:10px;padding:11px 24px;font-weight:600;font-size:14px;cursor:pointer}
+  .btn-ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy);border-radius:10px;padding:9px 18px;font-weight:600;font-size:13.5px;cursor:pointer}
+  .btn-ghost:disabled{color:var(--line);border-color:var(--line);cursor:default}
+
+  .acc{margin-bottom:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .acc-head{width:100%;text-align:left;background:transparent;border:none;padding:16px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+  .acc-head .t{font-family:'GFS Didot',Georgia,serif;font-size:19px;color:var(--navy)}
+  .acc-head .pm{color:var(--sea);font-size:18px}
+  .acc-body{padding:0 18px 16px}
+  .phrase{padding:12px 0;border-top:1px solid var(--line);display:flex;gap:10px}
+  .star{background:none;border:none;cursor:pointer;font-size:20px;color:var(--line);padding:0 6px 0 0;line-height:1.3}
+  .star.fav{color:var(--honey)}
+  .phrase .gr{font-family:'GFS Didot',Georgia,serif;font-size:18px}
+  .phrase .tr{font-size:12.5px;color:var(--sea);font-weight:600;margin:2px 0}
+  .phrase .en{font-size:13.5px}
+  .phrase .ctx{font-size:12.5px;color:var(--grey);margin-top:3px;line-height:1.45}
+
+  .dark-card{background:linear-gradient(150deg,var(--navy),var(--navy-deep));border-radius:18px;padding:28px 22px;color:var(--paper);text-align:center;margin-bottom:16px}
+  .dark-card .eyebrow{font-size:11.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--honey)}
+  .dark-card .song-t{font-family:'GFS Didot',Georgia,serif;font-size:28px;margin:14px 0 6px;line-height:1.25}
+  .dark-card .song-a{font-size:15px;color:#B9CBD8}
+  .dark-card .song-n{font-size:13.5px;line-height:1.6;color:#D7E2EA;margin:16px auto 20px;max-width:420px}
+  .spotify{display:inline-block;background:#1DB954;color:#fff;text-decoration:none;font-weight:700;font-size:14px;border-radius:999px;padding:12px 26px}
+  .dark-card .small{font-size:11.5px;color:#8FA6B6;margin-top:12px}
+
+  .word-card{background:var(--honey-soft);border:1px solid rgba(201,155,63,.33);border-radius:16px;padding:20px 22px;margin-bottom:28px}
+  .word-card .eyebrow{font-size:11.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--honey);font-weight:700;margin-bottom:8px}
+  .word-row{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap}
+  .word-row .wg{font-family:'GFS Didot',Georgia,serif;font-size:32px;color:var(--navy)}
+  .word-row .wt{color:var(--sea);font-weight:600;font-size:14px}
+
+  .grid-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+  .fact{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column}
+  .fact .fl{font-family:'GFS Didot',Georgia,serif;font-size:18px;color:var(--navy);margin-bottom:10px}
+  .fact p{font-size:14px;line-height:1.6;margin:0;flex:1}
+  .fact a{font-size:12.5px;color:var(--sea);font-weight:600;margin-top:12px;word-break:break-all;text-decoration:none}
+  .fact button{margin-top:12px;align-self:flex-start;background:transparent;color:var(--navy);border:1.5px solid var(--navy);border-radius:999px;padding:7px 16px;font-weight:600;font-size:12.5px;cursor:pointer}
+
+  .cute-wrap{background:linear-gradient(150deg,var(--navy),var(--navy-deep));border-radius:16px;padding:22px 20px;margin-bottom:22px;color:var(--paper)}
+  .cute-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+  .cute{background:rgba(250,248,243,.07);border-radius:10px;padding:10px 12px}
+  .cute .gr{font-family:'GFS Didot',Georgia,serif;font-size:17px}
+  .cute .tr{font-size:12px;color:var(--honey);font-weight:600}
+  .cute .note{font-size:11.5px;color:#B9CBD8;margin-top:3px;line-height:1.4}
+
+  .flash{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 22px;text-align:center;max-width:520px;margin:0 auto}
+  .flash .count{font-size:11.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--grey)}
+  .flash .wg{font-family:'GFS Didot',Georgia,serif;font-size:38px;color:var(--navy);margin:12px 0 2px}
+  .flash .wt{color:var(--sea);font-weight:600;font-size:14px}
+  .flash .reveal-box{background:var(--sea-soft);border-radius:10px;padding:14px 16px;text-align:left;margin-top:16px}
+  .flash .rb-eyebrow{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--sea);font-weight:700;margin-bottom:6px}
+  .flash-nav{display:flex;justify-content:space-between;margin:14px auto 0;max-width:520px}
+
+  .quiz{max-width:460px;margin:10px auto 0;text-align:center}
+  .quiz-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px 20px}
+  .quiz .qletter{font-family:'GFS Didot',Georgia,serif;font-size:76px;color:var(--navy);line-height:1}
+  .quiz .qletter .low{color:var(--sea)}
+  .quiz .opts{display:grid;gap:8px;margin-top:22px}
+  .quiz .opts button{background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14px;cursor:pointer;text-align:left;color:var(--ink)}
+  .quiz .opts button.right{background:#E8F3EC;border-color:var(--good)}
+  .quiz .opts button.wrong{background:#F7E9E6;border-color:var(--bad)}
+  .quiz .verdict{margin-top:16px;font-size:14px;font-weight:600}
+  .quiz .verdict.ok{color:var(--good)}
+  .quiz .verdict.no{color:var(--bad)}
+</style>
+</head>
+<body>
+<header>
+  <div class="head-inner">
+    <div class="head-row">
+      <h1>Παρέα</h1>
+      <span class="tagline">paréa · your people, your table</span>
+    </div>
+    <p class="head-sub">Greek for one very specific goal: sitting at his family’s table and belonging there.</p>
+    <nav class="top-tabs" id="topTabs"></nav>
+  </div>
+</header>
+<main id="main">
+  <div id="jsWarning" style="background:#F6EDDA;border:1px solid #C99B3F;border-radius:12px;padding:18px;line-height:1.6;font-size:14.5px">
+    <strong style="font-size:16px">Γεια σου! One small step needed 👋</strong><br><br>
+    If you can read this message, the app’s code isn’t running yet — you’re probably viewing the file in a <em>preview</em> window (like the iPhone Files app), which blocks apps like this one.<br><br>
+    <strong>To open it properly:</strong><br>
+    📱 <strong>iPhone:</strong> download this file using <strong>Safari</strong> itself → tap the Downloads icon (arrow, top right) → tap the file there. It opens inside Safari and everything works. Then Share → “Add to Home Screen”.<br><br>
+    🤖 <strong>Android:</strong> open your <strong>Chrome</strong> downloads (⋮ → Downloads) and tap the file there, or in your Files app choose “Open with → Chrome”.<br><br>
+    💻 <strong>Computer:</strong> double-click the file — it opens in your browser and just works.
+  </div>
+</main>
+<nav class="bottom-nav" id="bottomNav"></nav>
+
+<script>
+"use strict";
+
+/* ------------------------------ DATA ------------------------------ */
+
+const ALPHABET=[
+ {up:"Α",low:"α",name:"άλφα",tr:"alfa",sound:"a — as in “father”",tip:null},
+ {up:"Β",low:"β",name:"βήτα",tr:"vita",sound:"v — as in “vase”",tip:"Looks like B, but it is NEVER “b”. Always “v”."},
+ {up:"Γ",low:"γ",name:"γάμα",tr:"ghama",sound:"gh — soft, from the throat",tip:"Before e/i sounds it softens to “y” as in “yes”: για = ya."},
+ {up:"Δ",low:"δ",name:"δέλτα",tr:"dhelta",sound:"th — as in “this”",tip:"Soft th, not a hard “d”. Hard d is written ντ."},
+ {up:"Ε",low:"ε",name:"έψιλον",tr:"epsilon",sound:"e — as in “met”",tip:null},
+ {up:"Ζ",low:"ζ",name:"ζήτα",tr:"zita",sound:"z — as in “zoo”",tip:null},
+ {up:"Η",low:"η",name:"ήτα",tr:"ita",sound:"ee — as in “see”",tip:"Lowercase η looks like an “n” — but it is a vowel: ee."},
+ {up:"Θ",low:"θ",name:"θήτα",tr:"thita",sound:"th — as in “think”",tip:"The other th: θ is “think”, δ is “this”."},
+ {up:"Ι",low:"ι",name:"γιώτα",tr:"yota",sound:"ee — as in “see”",tip:null},
+ {up:"Κ",low:"κ",name:"κάπα",tr:"kapa",sound:"k — as in “kite”",tip:null},
+ {up:"Λ",low:"λ",name:"λάμδα",tr:"lamdha",sound:"l — as in “love”",tip:null},
+ {up:"Μ",low:"μ",name:"μι",tr:"mi",sound:"m — as in “mother”",tip:null},
+ {up:"Ν",low:"ν",name:"νι",tr:"ni",sound:"n — as in “no”",tip:"Lowercase ν looks like “v” — but it is always “n”."},
+ {up:"Ξ",low:"ξ",name:"ξι",tr:"ksi",sound:"ks — as in “box”",tip:null},
+ {up:"Ο",low:"ο",name:"όμικρον",tr:"omikron",sound:"o — as in “story”",tip:null},
+ {up:"Π",low:"π",name:"πι",tr:"pi",sound:"p — as in “pot”",tip:null},
+ {up:"Ρ",low:"ρ",name:"ρο",tr:"ro",sound:"r — lightly rolled",tip:"Looks like “p” — but it is always “r”, like Spanish r. Easy for you!"},
+ {up:"Σ",low:"σ / ς",name:"σίγμα",tr:"sighma",sound:"s — as in “sun”",tip:"Two lowercase forms: σ inside a word, ς only at the end. σπίτι, but μπαμπάς."},
+ {up:"Τ",low:"τ",name:"ταυ",tr:"taf",sound:"t — as in “top”",tip:null},
+ {up:"Υ",low:"υ",name:"ύψιλον",tr:"ipsilon",sound:"ee — as in “see”",tip:"Looks like “u”, sounds like “ee”. In combos (ου, αυ, ευ) it changes — see below."},
+ {up:"Φ",low:"φ",name:"φι",tr:"fi",sound:"f — as in “fun”",tip:null},
+ {up:"Χ",low:"χ",name:"χι",tr:"hi",sound:"h — rough, like Spanish “j”",tip:"Like the j in “jamón” — you already make this sound."},
+ {up:"Ψ",low:"ψ",name:"ψι",tr:"psi",sound:"ps — as in “lapse”",tip:"One letter, two sounds: ψωμί (psomí) = bread."},
+ {up:"Ω",low:"ω",name:"ωμέγα",tr:"omegha",sound:"o — same as ο",tip:"Identical sound to όμικρον. Spelling tells you which to write; the ear cannot."}
+];
+
+const COMBOS=[
+ {gr:"ου",sound:"oo",ex:"σου (soo) — “your”"},
+ {gr:"αι",sound:"e",ex:"και (ke) — “and”"},
+ {gr:"ει / οι",sound:"ee",ex:"είναι (íne) — “is”"},
+ {gr:"μπ",sound:"b",ex:"μπαμπάς (babás) — “dad”"},
+ {gr:"ντ",sound:"d",ex:"ντομάτα (domáta) — “tomato”"},
+ {gr:"γκ / γγ",sound:"g / ng",ex:"αγκαλιά (angaliá) — “hug”"},
+ {gr:"τσ",sound:"ts",ex:"τσάι (tsái) — “tea”"},
+ {gr:"τζ",sound:"dz",ex:"τζατζίκι (dzadzíki)"},
+ {gr:"αυ",sound:"av / af",ex:"αύριο (ávrio) — “tomorrow”"},
+ {gr:"ευ",sound:"ev / ef",ex:"ευχαριστώ (efharistó) — “thank you”"}
+];
+
+const PHRASE_GROUPS=[
+ {id:"arrive",title:"Arriving at the house",note:"With his parents, use the plural/formal forms (σας, κάνετε) until they tell you otherwise — it reads as respect.",items:[
+  {gr:"Γεια σας!",tr:"ya sas",en:"Hello! (formal / to several people)",ctx:"Your default greeting to his parents and grandparents."},
+  {gr:"Γεια σου!",tr:"ya soo",en:"Hi! (informal, one person)",ctx:"For your boyfriend, cousins, friends."},
+  {gr:"Καλημέρα",tr:"kaliméra",en:"Good morning",ctx:"Used generously — even until early afternoon."},
+  {gr:"Καλησπέρα",tr:"kalispéra",en:"Good evening",ctx:"From late afternoon on. Arriving for dinner? This one."},
+  {gr:"Τι κάνετε;",tr:"ti kánete",en:"How are you? (formal)",ctx:"Note: the Greek question mark is a semicolon ;"},
+  {gr:"Καλά, ευχαριστώ. Εσείς;",tr:"kalá, efharistó. esís?",en:"Fine, thank you. And you?",ctx:"The full polite exchange in one line."},
+  {gr:"Χάρηκα πολύ!",tr:"hárika polí",en:"Very nice to meet you!",ctx:"First introductions — aunts, uncles, neighbors who appear from nowhere."}
+ ]},
+ {id:"table",title:"At the table",note:"This is where you win them over. Greek families feed people as an act of love — comment on the food and you speak their language.",items:[
+  {gr:"Καλή όρεξη!",tr:"kalí óreksi",en:"Enjoy your meal!",ctx:"Said before everyone starts eating. Like “buen provecho”."},
+  {gr:"Πολύ νόστιμο!",tr:"polí nóstimo",en:"Very tasty!",ctx:"The single highest-value phrase in this app. Use it every visit."},
+  {gr:"Είναι υπέροχο!",tr:"íne ipéroho",en:"It’s wonderful!",ctx:"Level two of the compliment. Deploy for the grandmother’s speciality."},
+  {gr:"Λίγο ακόμα, παρακαλώ",tr:"lígho akóma, parakaló",en:"A little more, please",ctx:"This sentence will make his mother love you."},
+  {gr:"Χόρτασα, ευχαριστώ",tr:"hórtasa, efharistó",en:"I’m full, thank you",ctx:"You will need it. It will be ignored at least twice — that’s normal."},
+  {gr:"Στην υγειά μας!",tr:"stin iyá mas",en:"To our health! (cheers)",ctx:"Raising glasses. Short version: Γεια μας! (ya mas)."},
+  {gr:"Ευχαριστώ πολύ για το φαγητό",tr:"efharistó polí ya to fayitó",en:"Thank you very much for the food",ctx:"On leaving the table. Full sentence = big impression."}
+ ]},
+ {id:"polite",title:"Surviving the conversation",note:"Your honest toolkit for the moments when everyone is talking at once and you understand nothing.",items:[
+  {gr:"Ναι / Όχι",tr:"ne / óhi",en:"Yes / No",ctx:"Careful: ναι (yes) sounds like “ne”. A famous trap."},
+  {gr:"Παρακαλώ",tr:"parakaló",en:"Please / You’re welcome",ctx:"One word, both meanings. Also how Greeks answer the phone."},
+  {gr:"Συγγνώμη",tr:"sighnómi",en:"Sorry / Excuse me",ctx:"For squeezing past people or interrupting."},
+  {gr:"Δεν καταλαβαίνω",tr:"dhen katalavéno",en:"I don’t understand",ctx:"Say it with a smile — it invites help, not pity."},
+  {gr:"Πιο αργά, παρακαλώ",tr:"pio arghá, parakaló",en:"Slower, please",ctx:"Essential. Greek family speed is not beginner speed."},
+  {gr:"Μαθαίνω ελληνικά",tr:"mathéno eliniká",en:"I’m learning Greek",ctx:"Instantly wins goodwill and patience."},
+  {gr:"Πώς λέγεται αυτό;",tr:"pos léyete aftó",en:"How is this called?",ctx:"Point at things at dinner — turns the family into your teachers."}
+ ]},
+ {id:"warmth",title:"Warmth & compliments",note:null,items:[
+  {gr:"Το σπίτι σας είναι πολύ όμορφο",tr:"to spíti sas íne polí ómorfo",en:"Your house is very beautiful",ctx:"First visit classic."},
+  {gr:"Μου αρέσει πολύ",tr:"moo arési polí",en:"I like it very much",ctx:"Works for food, places, gifts, music."},
+  {gr:"Είστε πολύ καλοί",tr:"íste polí kalí",en:"You are very kind (plural)",ctx:"When they inevitably overdo the hospitality."},
+  {gr:"Σ’ αγαπώ",tr:"s’aghapó",en:"I love you",ctx:"For the boyfriend, not the parents. Important distinction."},
+  {gr:"Μου έλειψες",tr:"moo élipses",en:"I missed you",ctx:"Also boyfriend territory."}
+ ]},
+ {id:"celebrate",title:"Celebrations & name days",note:"Greeks celebrate name days (γιορτή) as much as birthdays. One phrase covers almost everything:",items:[
+  {gr:"Χρόνια πολλά!",tr:"hrónia polá",en:"“Many years!”",ctx:"The universal wish: birthdays, name days, Christmas, Easter, holidays. Memorize this one first."},
+  {gr:"Καλά Χριστούγεννα",tr:"kalá hristúyena",en:"Merry Christmas",ctx:null},
+  {gr:"Καλό Πάσχα",tr:"kaló páscha",en:"Happy Easter",ctx:"Easter is the biggest family event of the Greek year."},
+  {gr:"Χριστός Ανέστη — Αληθώς Ανέστη",tr:"hristós anésti — alithós anésti",en:"Christ is risen — Truly he is risen",ctx:"The Easter exchange: they say the first, you answer the second."},
+  {gr:"Να ζήσετε!",tr:"na zísete",en:"May you live long!",ctx:"For engagements and weddings. File away for the future."}
+ ]}
+];
+
+const CUTE_NAMES=[
+ {gr:"αγάπη μου",tr:"aghápi moo",en:"my love",note:"The default. Used constantly, by everyone, for everyone they love."},
+ {gr:"μωρό μου",tr:"moró moo",en:"my baby",note:"Very common between couples."},
+ {gr:"καρδιά μου",tr:"kardhiá moo",en:"my heart",note:"Warm and classic."},
+ {gr:"ψυχή μου",tr:"psihí moo",en:"my soul",note:"Deeper register — for tender moments."},
+ {gr:"μάτια μου",tr:"mátia moo",en:"my eyes",note:"Very Greek: the eyes are the most precious thing. You heard it in the Dalaras song."},
+ {gr:"αστέρι μου",tr:"astéri moo",en:"my star",note:"Sweet and slightly playful."},
+ {gr:"ζωή μου",tr:"zoí moo",en:"my life",note:"Big one. Also what γιαγιά might call YOU."},
+ {gr:"αγόρι μου",tr:"aghóri moo",en:"my boy",note:"Affectionate and a bit cheeky."},
+ {gr:"κούκλε μου",tr:"kúkle moo",en:"my doll (to a man)",note:"Means “you look great”. Say it when he dresses up."},
+ {gr:"λατρεία μου",tr:"latría moo",en:"my adoration",note:"Maximum sweetness. Deploy sparingly for effect."}
+];
+
+const US_GROUPS=[
+ {id:"day",title:"About the day",note:"The daily check-in. Note: as a woman, adjectives about yourself end in -η/-α: κουρασμένη (tired), not κουρασμένος.",items:[
+  {gr:"Πώς ήταν η μέρα σου;",tr:"pos ítan i méra soo",en:"How was your day?",ctx:"Your daily opener. Say it every evening and watch his face."},
+  {gr:"Πώς πήγε η δουλειά;",tr:"pos píye i dhuliá",en:"How did work go?",ctx:null},
+  {gr:"Τι έκανες σήμερα;",tr:"ti ékanes símera",en:"What did you do today?",ctx:null},
+  {gr:"Ήταν ωραία μέρα",tr:"ítan oréa méra",en:"It was a nice day",ctx:"Your answer when he asks you back."},
+  {gr:"Είμαι κουρασμένη",tr:"íme kurazméni",en:"I’m tired (fem.)",ctx:"The -η ending is yours. He says κουρασμένος."},
+  {gr:"Δούλεψα πολύ σήμερα",tr:"dhúlepsa polí símera",en:"I worked a lot today",ctx:"Thesis season vocabulary."},
+  {gr:"Πεινάω!",tr:"pináo",en:"I’m hungry!",ctx:"One word, maximum usefulness."},
+  {gr:"Τι θες να φάμε;",tr:"ti thes na fáme",en:"What do you want to eat?",ctx:"The eternal couple question, now in Greek."}
+ ]},
+ {id:"plans",title:"Plans & little moments",note:null,items:[
+  {gr:"Πάμε βόλτα;",tr:"páme vólta",en:"Shall we go for a walk?",ctx:"The βόλτα (stroll) is a Greek institution."},
+  {gr:"Τι βλέπουμε απόψε;",tr:"ti vlépume apópse",en:"What are we watching tonight?",ctx:null},
+  {gr:"Πάμε για καφέ;",tr:"páme ya kafé",en:"Shall we go for coffee?",ctx:"Greek coffee dates last 3 hours minimum. You’ve been warned."},
+  {gr:"Έλα εδώ!",tr:"éla edhó",en:"Come here!",ctx:"Έλα is the most Greek word alive — it also means “hello?” on the phone and “no way!”."},
+  {gr:"Περίμενε λίγο",tr:"perímene lígho",en:"Wait a moment",ctx:null},
+  {gr:"Καληνύχτα, όνειρα γλυκά",tr:"kaliníhta, ónira ghliká",en:"Goodnight, sweet dreams",ctx:"Last message of the day."}
+ ]},
+ {id:"hobbies",title:"Work & hobbies",note:"Built around your actual life — so the sentences are ones you’ll really use.",items:[
+  {gr:"Μου αρέσει να σχεδιάζω",tr:"moo arési na skhedhiázo",en:"I like to design",ctx:"Your line. Architecture and design = σχέδιο."},
+  {gr:"Γράφω τη διπλωματική μου",tr:"ghráfo ti dhiplomatikí moo",en:"I’m writing my thesis",ctx:"Ready-made for when his parents ask what you do."},
+  {gr:"Σπουδάζω πολεοδομία",tr:"spudházo poleodhomía",en:"I study urban planning",ctx:"πόλη (city) + δομή (structure) — a very buildable word."},
+  {gr:"Μου αρέσει η μουσική",tr:"moo arési i musikí",en:"I like music",ctx:"Then mention the song of the day. Full circle."},
+  {gr:"Τι σου αρέσει να κάνεις;",tr:"ti soo arési na kánis",en:"What do you like to do?",ctx:"Turn any conversation back to them."},
+  {gr:"Δείξε μου!",tr:"dhíkse moo",en:"Show me!",ctx:"Curiosity in one word."},
+  {gr:"Μπράβο σου!",tr:"brávo soo",en:"Well done!",ctx:"Yes — “bravo” is Greek in spirit and daily use."}
+ ]}
+];
+
+const VOCAB=[
+ {gr:"η γιαγιά",tr:"yayá",en:"grandmother",sent:"Η γιαγιά μαγειρεύει υπέροχα.",strans:"i yayá mayirévi ipéroha",sen:"Grandma cooks wonderfully.",where:"The most important person to charm. Fact."},
+ {gr:"ο παππούς",tr:"papús",en:"grandfather",sent:"Ο παππούς λέει ιστορίες.",strans:"o papús léi istoríes",sen:"Grandpa tells stories.",where:"Nod along; laugh when others laugh."},
+ {gr:"η μαμά",tr:"mamá",en:"mom",sent:"Η μαμά σου είναι πολύ γλυκιά.",strans:"i mamá soo íne polí ghlikiá",sen:"Your mom is very sweet.",where:"Say it to your boyfriend — it travels back to her."},
+ {gr:"ο μπαμπάς",tr:"babás",en:"dad",sent:"Ο μπαμπάς φτιάχνει καφέ.",strans:"o babás ftiáhni kafé",sen:"Dad is making coffee.",where:"μπ = b. Your first combo letters in the wild."},
+ {gr:"η οικογένεια",tr:"ikoyénia",en:"family",sent:"Η οικογένειά σου είναι υπέροχη.",strans:"i ikoyéniá soo íne ipérohi",sen:"Your family is wonderful.",where:"Say it on the drive home. Guaranteed smile."},
+ {gr:"το φαγητό",tr:"fayitó",en:"food",sent:"Το φαγητό είναι έτοιμο!",strans:"to fayitó íne étimo",sen:"The food is ready!",where:"You will hear this shouted. Now you’ll know why everyone moves."},
+ {gr:"το ψωμί",tr:"psomí",en:"bread",sent:"Λίγο ψωμί, παρακαλώ.",strans:"lígho psomí, parakaló",sen:"A little bread, please.",where:"Always on the table. Always."},
+ {gr:"ο καφές",tr:"kafés",en:"coffee",sent:"Θέλεις καφέ;",strans:"thélis kafé?",sen:"Do you want coffee?",where:"You’ll be asked within 10 minutes of arriving. Answer: Ναι, ευχαριστώ!"},
+ {gr:"το γλυκό",tr:"ghlikó",en:"dessert / sweet",sent:"Το γλυκό της γιαγιάς!",strans:"to ghlikó tis yayás",sen:"Grandma’s dessert!",where:"Refusing it is not a real option."},
+ {gr:"νόστιμο",tr:"nóstimo",en:"tasty",sent:"Πολύ νόστιμο, γιαγιά!",strans:"polí nóstimo, yayá",sen:"Very tasty, grandma!",where:"The sentence that pays for this whole app."},
+ {gr:"ωραίο",tr:"oréo",en:"nice / lovely",sent:"Τι ωραίο σπίτι!",strans:"ti oréo spíti",sen:"What a lovely house!",where:"The all-purpose compliment word."},
+ {gr:"το σπίτι",tr:"spíti",en:"house / home",sent:"Πάμε σπίτι;",strans:"páme spíti?",sen:"Shall we go home?",where:"Whispered to the boyfriend at hour four of lunch."},
+ {gr:"η θάλασσα",tr:"thálasa",en:"the sea",sent:"Πάμε στη θάλασσα!",strans:"páme sti thálasa",sen:"Let’s go to the sea!",where:"The most Greek sentence that exists."},
+ {gr:"αύριο",tr:"ávrio",en:"tomorrow",sent:"Θα έρθουμε αύριο.",strans:"tha érthume ávrio",sen:"We’ll come tomorrow.",where:"αυ = “av”. Combo spotting practice."},
+ {gr:"μαζί",tr:"mazí",en:"together",sent:"Όλοι μαζί στο τραπέζι.",strans:"óli mazí sto trapézi",sen:"Everyone together at the table.",where:"The core value of the whole culture, in one word."},
+ {gr:"η αγάπη",tr:"aghápi",en:"love",sent:"Αγάπη μου!",strans:"aghápi moo",sen:"My love!",where:"What his relatives may start calling you once you say νόστιμο enough times."}
+];
+
+const SONGS=[
+ {title:"Ζορμπάς (Zorba’s Dance)",artist:"Μίκης Θεοδωράκης — Mikis Theodorakis",note:"The syrtaki everyone knows. Instrumental, so no lyrics pressure — just the feeling."},
+ {title:"Τα Παιδιά του Πειραιά",artist:"Μελίνα Μερκούρη — Melina Mercouri",note:"“The Children of Piraeus”, Oscar-winning song from Never on Sunday (1960). Every Greek can sing it."},
+ {title:"Φραγκοσυριανή",artist:"Μάρκος Βαμβακάρης — Markos Vamvakaris",note:"The rebetiko classic. Slow, repetitive lyrics — genuinely good for learners."},
+ {title:"Συννεφούλα",artist:"Διονύσης Σαββόπουλος — Dionysis Savvopoulos",note:"“Little cloud.” 60s classic, gentle tempo, beloved at family gatherings."},
+ {title:"Το Τρένο Φεύγει στις Οχτώ",artist:"Χάρις Αλεξίου — Haris Alexiou",note:"“The train leaves at eight” (Theodorakis). Slow and clear — great listening practice."},
+ {title:"Χάρτινο το Φεγγαράκι",artist:"Νάνα Μούσχουρη — Nana Mouskouri",note:"“Paper moon”, by Manos Hadjidakis. Dreamlike, sung slowly."},
+ {title:"Μη Μου Θυμώνεις Μάτια Μου",artist:"Γιώργος Νταλάρας — George Dalaras",note:"“Don’t be angry with me, my eyes.” Note: μάτια μου (my eyes) is a Greek term of endearment."},
+ {title:"Δυο Πόρτες Έχει η Ζωή",artist:"Στέλιος Καζαντζίδης — Stelios Kazantzidis",note:"“Life has two doors.” Kazantzidis is the voice of a whole generation — the grandparents will approve."},
+ {title:"Όμορφη Πόλη",artist:"Μίκης Θεοδωράκης",note:"“Beautiful city.” Poetry set to music — a very Greek tradition."},
+ {title:"Μισιρλού",artist:"Παραδοσιακό — Traditional",note:"Yes — the Pulp Fiction song is Greek rebetiko from the 1920s. Impress the uncles with this fact."},
+ {title:"Σ’ Αγαπώ Γιατί Είσαι Ωραία",artist:"Παραδοσιακό — Traditional",note:"“I love you because you are beautiful.” A folk song everyone joins in on — learn the title, you already know 4 of its words."},
+ {title:"Όλα Σε Θυμίζουν",artist:"Γιώργος Νταλάρας",note:"“Everything reminds me of you.” A slow, aching classic."},
+ {title:"Άσπρα Καράβια",artist:"Μαρινέλλα — Marinella",note:"“White ships.” Marinella is Greek pop royalty of the 60s–70s."},
+ {title:"Καίγομαι",artist:"Δήμητρα Γαλάνη & Χάρις Αλεξίου",note:"“I’m burning.” Two of the greatest Greek voices on one track."}
+];
+
+const FACTS=[
+ {city:"Athens",fact:"The Parthenon has almost no straight lines — its columns lean slightly inward and its base curves upward, optical corrections so the whole temple looks perfectly straight to the eye.",url:"https://en.wikipedia.org/wiki/Parthenon"},
+ {city:"Athens",fact:"Athens has been continuously inhabited for over 3,400 years, making it one of the oldest cities in the world — and it’s named after Athena, who won the city from Poseidon with the gift of an olive tree.",url:"https://en.wikipedia.org/wiki/Athens"},
+ {city:"Athens",fact:"The Panathenaic Stadium (Καλλιμάρμαρο) is the only stadium in the world built entirely of marble — and it hosted the first modern Olympic Games in 1896.",url:"https://en.wikipedia.org/wiki/Panathenaic_Stadium"},
+ {city:"Athens",fact:"In the Ancient Agora, below the Acropolis, Socrates debated and democracy was practiced — you can walk the same paths on your visit.",url:"https://en.wikipedia.org/wiki/Ancient_Agora_of_Athens"},
+ {city:"Athens",fact:"The Evzones — the presidential guards in traditional dress — change guard at Syntagma Square every hour, on the hour. Their shoes weigh over 3 kg each.",url:"https://en.wikipedia.org/wiki/Evzones"},
+ {city:"Athens",fact:"The Temple of Olympian Zeus took roughly 640 years to complete — begun in the 6th century BC, finished under Emperor Hadrian in 131 AD.",url:"https://en.wikipedia.org/wiki/Temple_of_Olympian_Zeus,_Athens"},
+ {city:"Athens",fact:"The Acropolis Museum is built directly over an ancient neighborhood — glass floors let you look down at excavated streets and houses beneath your feet.",url:"https://en.wikipedia.org/wiki/Acropolis_Museum"},
+ {city:"Athens",fact:"Plaka, the neighborhood beneath the Acropolis, is called the “Neighborhood of the Gods” — it’s the city’s oldest district, built over ancient residential areas.",url:"https://en.wikipedia.org/wiki/Plaka"},
+ {city:"Athens",fact:"Legend says Mount Lycabettus — the highest point in central Athens — was a rock Athena dropped while carrying it to the Acropolis. Sunset from the top is a classic first-visit ritual.",url:"https://en.wikipedia.org/wiki/Mount_Lycabettus"},
+ {city:"Crete",fact:"Knossos, near Heraklion, is often called Europe’s oldest city — the Minoan palace here inspired the myth of the Labyrinth and the Minotaur.",url:"https://en.wikipedia.org/wiki/Knossos"},
+ {city:"Crete",fact:"Crete is Greece’s largest island and was home to the Minoans, Europe’s first advanced civilization, flourishing around 2000 BC.",url:"https://en.wikipedia.org/wiki/Crete"},
+ {city:"Crete",fact:"The Samaria Gorge is one of Europe’s longest gorges — a 16 km hike through a national park that narrows to just 4 meters wide at the “Iron Gates”.",url:"https://en.wikipedia.org/wiki/Samaria_Gorge"},
+ {city:"Crete",fact:"According to myth, Zeus himself was born in a cave on Crete — the Psychro Cave on the Lasithi plateau is the most famous claimant.",url:"https://en.wikipedia.org/wiki/Psychro_Cave"},
+ {city:"Crete",fact:"Elafonisi beach is famous for its pink sand — the color comes from crushed shells and coral fragments mixed into the white sand.",url:"https://en.wikipedia.org/wiki/Elafonisi"},
+ {city:"Crete",fact:"Chania’s old town wraps around a 14th-century Venetian harbor, with an Egyptian-era lighthouse — many say it’s the most beautiful town in Greece.",url:"https://en.wikipedia.org/wiki/Chania"},
+ {city:"Crete",fact:"After every meal in Crete, you’ll likely be offered free raki (τσικουδιά) and a small dessert — refusing is nearly impossible, and slightly rude. Say Γεια μας!",url:"https://en.wikipedia.org/wiki/Tsikoudia"},
+ {city:"Crete",fact:"The Phaistos Disc, in Heraklion’s Archaeological Museum, is a 3,600-year-old clay disc whose stamped symbols have never been deciphered.",url:"https://en.wikipedia.org/wiki/Phaistos_Disc"},
+ {city:"Crete",fact:"The painter El Greco was Cretan — born Doménikos Theotokópoulos near Heraklion in 1541, he signed his works in Greek letters all his life.",url:"https://en.wikipedia.org/wiki/El_Greco"},
+ {city:"Crete",fact:"Spinalonga, the fortress island off Elounda, was a Venetian stronghold and later one of Europe’s last leper colonies, closing in 1957 — now one of Crete’s most visited sites.",url:"https://en.wikipedia.org/wiki/Spinalonga"},
+ {city:"Crete",fact:"The traditional Cretan diet — olive oil, greens, legumes, little meat — was the original basis for what the world now calls the Mediterranean diet.",url:"https://en.wikipedia.org/wiki/Mediterranean_diet"}
+];
+
+/* ------------------------------ STATE ------------------------------ */
+
+const TABS=[
+ {id:"alphabet",label:"Αλφάβητο",sub:"alphabet",icon:"Αα",iconGr:true},
+ {id:"phrases",label:"Φράσεις",sub:"family",icon:"🏠"},
+ {id:"us",label:"Εμείς",sub:"you two",icon:"❤️"},
+ {id:"words",label:"Λέξεις",sub:"words",icon:"📖"},
+ {id:"today",label:"Σήμερα",sub:"song · word · facts",icon:"☀️"}
+];
+
+let state={
+ tab:"alphabet",
+ learned:[],favs:[],
+ alphaMode:"study",
+ flipped:{},openPhrase:"arrive",openUs:"day",
+ wordIdx:0,wordRevealed:false,
+ quiz:null,quizPicked:null,quizScore:{right:0,total:0},
+ athIdx:0,creIdx:0
+};
+
+function loadProgress(){
+ try{
+  const raw=localStorage.getItem("parea-progress");
+  if(raw){const p=JSON.parse(raw);state.learned=p.learned||[];state.favs=p.favs||[];}
+ }catch(e){/* private mode or file:// restrictions — app still works, just no saving */}
+}
+function saveProgress(){
+ try{localStorage.setItem("parea-progress",JSON.stringify({learned:state.learned,favs:state.favs}));}catch(e){}
+}
+
+function dayOfYear(d){const s=new Date(d.getFullYear(),0,0);return Math.floor((d-s)/86400000);}
+const DOY=dayOfYear(new Date());
+state.athIdx=DOY % FACTS.filter(f=>f.city==="Athens").length;
+state.creIdx=DOY % FACTS.filter(f=>f.city==="Crete").length;
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function spotifyUrl(song){
+ const artist=(song.artist.split("—")[1]||song.artist).trim();
+ return "https://open.spotify.com/search/"+encodeURIComponent(song.title+" "+artist);
+}
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
+
+/* ------------------------------ RENDER ------------------------------ */
+
+const main=document.getElementById("main");
+
+function renderNavs(){
+ const top=document.getElementById("topTabs");
+ top.innerHTML=TABS.map(t=>`<button data-tab="${t.id}" class="${state.tab===t.id?"active":""}" role="tab" aria-selected="${state.tab===t.id}"><span class="gr">${t.label}</span><span class="en">${t.sub}</span></button>`).join("");
+ const bot=document.getElementById("bottomNav");
+ bot.innerHTML=TABS.map(t=>`<button data-tab="${t.id}" class="${state.tab===t.id?"active":""}" role="tab" aria-selected="${state.tab===t.id}"><span class="icon ${t.iconGr?"gr":""}">${t.icon}</span><span class="lbl">${t.label}</span></button>`).join("");
+}
+
+function render(){
+ renderNavs();
+ if(state.tab==="alphabet")renderAlphabet();
+ else if(state.tab==="phrases")renderPhraseTab("phrases",PHRASE_GROUPS,state.openPhrase,
+  "Phrases for real family life",
+  "Organized by the situations you’ll actually be in. Star ★ the ones you want to drill — they’re saved on this device.");
+ else if(state.tab==="us")renderUs();
+ else if(state.tab==="words")renderWords();
+ else renderToday();
+}
+
+/* ---- alphabet ---- */
+function renderAlphabet(){
+ let html=`
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:6px">
+    <h2>The 24 letters</h2>
+    <div style="display:flex;gap:6px">
+      <button class="pill ${state.alphaMode==="study"?"active":""}" data-mode="study">Study</button>
+      <button class="pill ${state.alphaMode==="quiz"?"active":""}" data-mode="quiz">Quiz me</button>
+    </div>
+  </div>
+  <p class="lead" style="margin-bottom:6px">Tap a tile to flip it. Once a letter feels solid, mark it — the app remembers between visits.</p>
+  <p class="muted" style="margin:0 0 18px">Learned: <strong style="color:var(--sea)">${state.learned.length} / 24</strong></p>`;
+
+ if(state.alphaMode==="study"){
+  html+=`<div class="grid-tiles">`+ALPHABET.map((l,i)=>{
+   const learned=state.learned.includes(l.up);
+   const flipped=!!state.flipped[l.up];
+   return `<div class="tile ${learned?"learned":""} ${flipped?"flipped":""}" data-flip="${i}" role="button" tabindex="0">
+    ${flipped?
+      `<div class="back"><div class="sound">${esc(l.sound)}</div>${l.tip?`<div>${esc(l.tip)}</div>`:""}<div class="hint">tap to flip back</div></div>`:
+      `<div class="big">${l.up} <span class="low">${l.low}</span></div>
+       <div class="foot"><div class="name">${l.name}</div><div class="tr">${l.tr}</div></div>`}
+    <button class="check" data-learn="${i}" aria-label="mark learned">${learned?"✓":""}</button>
+   </div>`;
+  }).join("")+`</div>`;
+
+  html+=`<h2 style="margin-top:40px">Letter combinations</h2>
+  <p class="lead" style="margin-bottom:16px">This is what most apps skip — and why Greek looks unreadable at first. Two letters, one sound. Learn these ten and street signs suddenly make sense.</p>
+  <div class="grid-combos">`+COMBOS.map(c=>`<div class="combo"><span class="cg">${c.gr}</span><div><div class="cs">= ${esc(c.sound)}</div><div class="ce">${esc(c.ex)}</div></div></div>`).join("")+`</div>
+  <div class="note-honey"><strong>The famous “ee” problem:</strong> Greek writes the sound “ee” six different ways — η, ι, υ, ει, οι, υι. They all sound identical. Good news: for <em>speaking</em>, you never have to choose. Spelling comes later.</div>`;
+ } else {
+  if(!state.quiz)newQuiz();
+  const q=state.quiz;
+  html+=`<div class="quiz"><div class="quiz-card">
+    <div style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--grey);margin-bottom:8px">What sound is this letter?</div>
+    <div class="qletter">${q.target.up} <span class="low">${q.target.low}</span></div>
+    <div class="opts">`+q.options.map(o=>{
+      let cls="";
+      if(state.quizPicked){
+        if(o.up===q.target.up)cls="right";
+        else if(o.up===state.quizPicked)cls="wrong";
+      }
+      return `<button class="${cls}" data-answer="${o.up}">${esc(o.sound)}</button>`;
+    }).join("")+`</div>`;
+  if(state.quizPicked){
+    const ok=state.quizPicked===q.target.up;
+    html+=`<div class="verdict ${ok?"ok":"no"}">${ok?"Σωστά! (sostá — correct!)":`It’s “${esc(q.target.sound)}” — ${q.target.name}`}</div>
+    <button class="btn" style="margin-top:12px" data-next-quiz="1">Next letter →</button>`;
+  }
+  html+=`</div><div class="muted" style="margin-top:12px">Score: <strong style="color:var(--sea)">${state.quizScore.right}</strong> / ${state.quizScore.total}</div></div>`;
+ }
+ main.innerHTML=html;
+}
+
+function newQuiz(){
+ const target=ALPHABET[Math.floor(Math.random()*ALPHABET.length)];
+ const others=shuffle(ALPHABET.filter(l=>l.up!==target.up)).slice(0,3);
+ state.quiz={target,options:shuffle([target,...others])};
+ state.quizPicked=null;
+}
+
+/* ---- phrase-style tabs (family + us groups share renderer) ---- */
+function phraseGroupHtml(groups,openId,starPrefix){
+ return groups.map(g=>{
+  const open=openId===g.id;
+  return `<div class="acc">
+   <button class="acc-head" data-acc="${starPrefix}:${g.id}"><span class="t">${esc(g.title)}</span><span class="pm">${open?"−":"+"}</span></button>
+   ${open?`<div class="acc-body">
+     ${g.note?`<p class="note-sea">${esc(g.note)}</p>`:""}
+     ${g.items.map(p=>{
+       const fav=state.favs.includes(p.gr);
+       return `<div class="phrase">
+        <button class="star ${fav?"fav":""}" data-fav="${esc(p.gr)}" aria-label="favorite">★</button>
+        <div style="flex:1">
+          <div class="gr">${p.gr}</div>
+          <div class="tr">${esc(p.tr)}</div>
+          <div class="en">${esc(p.en)}</div>
+          ${p.ctx?`<div class="ctx">${esc(p.ctx)}</div>`:""}
+        </div></div>`;
+     }).join("")}
+   </div>`:""}
+  </div>`;
+ }).join("");
+}
+
+function renderPhraseTab(kind,groups,openId,title,lead){
+ let html=`<h2>${title}</h2><p class="lead">${lead}</p>`;
+ html+=phraseGroupHtml(groups,openId,kind);
+ if(state.favs.length>0)html+=`<p class="muted">★ ${state.favs.length} starred — ask your boyfriend to quiz you on exactly these.</p>`;
+ main.innerHTML=html;
+}
+
+/* ---- us ---- */
+function renderUs(){
+ let html=`<h2>Εμείς οι δυο — the two of you</h2>
+ <p class="lead">Everyday couple conversation: the daily check-in, plans, work and hobbies. Practicing with him 5 minutes a day beats any app — these are your scripts.</p>
+ <div class="cute-wrap">
+   <div style="font-size:11.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--honey);margin-bottom:12px">Cute names for him</div>
+   <div class="cute-grid">`+CUTE_NAMES.map(n=>`<div class="cute"><div class="gr">${n.gr}</div><div class="tr">${esc(n.tr)} — ${esc(n.en)}</div><div class="note">${esc(n.note)}</div></div>`).join("")+`</div>
+ </div>`;
+ html+=phraseGroupHtml(US_GROUPS,state.openUs,"us");
+ main.innerHTML=html;
+}
+
+/* ---- words ---- */
+function renderWords(){
+ const w=VOCAB[state.wordIdx];
+ let html=`<h2>Words in their natural habitat</h2>
+ <p class="lead">One word at a time, always inside a sentence you could genuinely say. Guess the meaning before revealing.</p>
+ <div class="flash">
+   <div class="count">Word ${state.wordIdx+1} of ${VOCAB.length}</div>
+   <div class="wg">${w.gr}</div>
+   <div class="wt">${esc(w.tr)}</div>`;
+ if(!state.wordRevealed){
+   html+=`<button class="btn" style="margin-top:20px" data-reveal="1">Reveal meaning</button>`;
+ }else{
+   html+=`<div style="margin-top:18px;text-align:left">
+    <div style="text-align:center;font-size:17px;font-weight:600;margin-bottom:16px">= ${esc(w.en)}</div>
+    <div class="reveal-box">
+      <div class="rb-eyebrow">Say it like this</div>
+      <div class="didot" style="font-size:18px">${w.sent}</div>
+      <div style="font-size:12.5px;color:var(--sea);font-weight:600;margin:2px 0 4px">${esc(w.strans)}</div>
+      <div style="font-size:13.5px">${esc(w.sen)}</div>
+    </div>
+    <div style="font-size:13px;color:var(--grey);margin-top:12px;line-height:1.5;font-style:italic">${esc(w.where)}</div>
+   </div>`;
+ }
+ html+=`</div>
+ <div class="flash-nav">
+   <button class="btn-ghost" data-word="-1" ${state.wordIdx===0?"disabled":""}>← Previous</button>
+   <button class="btn-ghost" data-word="1" ${state.wordIdx===VOCAB.length-1?"disabled":""}>Next →</button>
+ </div>`;
+ main.innerHTML=html;
+}
+
+/* ---- today ---- */
+function renderToday(){
+ const song=SONGS[DOY%SONGS.length];
+ const word=VOCAB[DOY%VOCAB.length];
+ const dateStr=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
+ const ath=FACTS.filter(f=>f.city==="Athens");
+ const cre=FACTS.filter(f=>f.city==="Crete");
+ const fa=ath[state.athIdx%ath.length];
+ const fc=cre[state.creIdx%cre.length];
+
+ main.innerHTML=`
+ <h2>Σήμερα — your daily dose</h2>
+ <p class="lead">Everything rotates each morning: one song, one word, and one fact from each of your destinations. Three weeks of daily visits = trip-ready.</p>
+
+ <div class="dark-card">
+   <div class="eyebrow">Τραγούδι της ημέρας · ${dateStr}</div>
+   <div class="song-t">${song.title}</div>
+   <div class="song-a">${song.artist}</div>
+   <p class="song-n">${esc(song.note)}</p>
+   <a class="spotify" href="${spotifyUrl(song)}" target="_blank" rel="noreferrer">♪ Open in Spotify</a>
+   <div class="small">Opens a Spotify search for this song — tap the top result.</div>
+ </div>
+
+ <div class="word-card">
+   <div class="eyebrow">Λέξη της ημέρας — word of the day</div>
+   <div class="word-row"><span class="wg">${word.gr}</span><span class="wt">${esc(word.tr)}</span><span style="font-size:15px">= ${esc(word.en)}</span></div>
+   <div style="margin-top:10px;font-size:14px"><span class="didot" style="font-size:16px">${word.sent}</span><span style="color:var(--grey)"> — ${esc(word.sen)}</span></div>
+   <div style="font-size:12.5px;color:var(--grey);margin-top:6px">Mission: use today’s word once with your boyfriend, and listen for it in today’s song.</div>
+ </div>
+
+ <h2>Athens &amp; Crete — get trip-ready</h2>
+ <p class="lead" style="margin-bottom:16px">One fact from each destination per day, with the source underneath if you want to go deeper. Tap “another one” if you’re hungry for more.</p>
+ <div class="grid-facts">
+   <div class="fact"><div class="fl">Αθήνα · Athens</div><p>${esc(fa.fact)}</p><a href="${fa.url}" target="_blank" rel="noreferrer">Source: ${fa.url.replace("https://","")}</a><button data-fact="ath">Another one →</button></div>
+   <div class="fact"><div class="fl">Κρήτη · Crete</div><p>${esc(fc.fact)}</p><a href="${fc.url}" target="_blank" rel="noreferrer">Source: ${fc.url.replace("https://","")}</a><button data-fact="cre">Another one →</button></div>
+ </div>
+
+ <div class="note-sea" style="margin-top:20px;font-size:13.5px">
+   <strong>Planning the trip itself?</strong> The official visitor guides are excellent:
+   <a href="https://www.thisisathens.org" target="_blank" rel="noreferrer" style="color:var(--sea);font-weight:600">thisisathens.org</a>
+   (Athens’ official guide) and
+   <a href="https://www.incrediblecrete.gr" target="_blank" rel="noreferrer" style="color:var(--sea);font-weight:600">incrediblecrete.gr</a>
+   (Crete’s official tourism site).
+ </div>`;
+}
+
+/* ------------------------------ EVENTS (delegated) ------------------------------ */
+
+document.addEventListener("click",(e)=>{
+ const t=e.target.closest("[data-tab],[data-mode],[data-flip],[data-learn],[data-acc],[data-fav],[data-reveal],[data-word],[data-answer],[data-next-quiz],[data-fact]");
+ if(!t)return;
+
+ if(t.dataset.tab){state.tab=t.dataset.tab;window.scrollTo({top:0});render();return;}
+ if(t.dataset.mode){state.alphaMode=t.dataset.mode;if(t.dataset.mode==="quiz")newQuiz();render();return;}
+ if(t.dataset.learn!==undefined){
+   e.stopPropagation();
+   const l=ALPHABET[+t.dataset.learn];
+   const i=state.learned.indexOf(l.up);
+   if(i>=0)state.learned.splice(i,1);else state.learned.push(l.up);
+   saveProgress();render();return;
+ }
+ if(t.dataset.flip!==undefined){
+   const l=ALPHABET[+t.dataset.flip];
+   state.flipped[l.up]=!state.flipped[l.up];
+   render();return;
+ }
+ if(t.dataset.acc){
+   const[kind,id]=t.dataset.acc.split(":");
+   if(kind==="us")state.openUs=state.openUs===id?null:id;
+   else state.openPhrase=state.openPhrase===id?null:id;
+   render();return;
+ }
+ if(t.dataset.fav){
+   const gr=t.dataset.fav;
+   const i=state.favs.indexOf(gr);
+   if(i>=0)state.favs.splice(i,1);else state.favs.push(gr);
+   saveProgress();render();return;
+ }
+ if(t.dataset.reveal){state.wordRevealed=true;render();return;}
+ if(t.dataset.word){
+   state.wordIdx=Math.min(VOCAB.length-1,Math.max(0,state.wordIdx+ +t.dataset.word));
+   state.wordRevealed=false;render();return;
+ }
+ if(t.dataset.answer){
+   if(state.quizPicked)return;
+   state.quizPicked=t.dataset.answer;
+   state.quizScore.total++;
+   if(state.quizPicked===state.quiz.target.up)state.quizScore.right++;
+   render();return;
+ }
+ if(t.dataset.nextQuiz){newQuiz();render();return;}
+ if(t.dataset.fact){
+   const ath=FACTS.filter(f=>f.city==="Athens").length;
+   const cre=FACTS.filter(f=>f.city==="Crete").length;
+   if(t.dataset.fact==="ath")state.athIdx=(state.athIdx+1)%ath;
+   else state.creIdx=(state.creIdx+1)%cre;
+   render();return;
+ }
+});
+
+document.addEventListener("keydown",(e)=>{
+ if((e.key==="Enter"||e.key===" ")&&e.target.dataset&&e.target.dataset.flip!==undefined){
+   e.preventDefault();
+   const l=ALPHABET[+e.target.dataset.flip];
+   state.flipped[l.up]=!state.flipped[l.up];
+   render();
+ }
+});
+
+try{
+  loadProgress();
+  render();
+}catch(err){
+  document.getElementById("main").innerHTML=
+   '<div style="background:#F7E9E6;border:1px solid #B04A3A;border-radius:12px;padding:18px;font-size:14px;line-height:1.6">'+
+   '<strong>Something went wrong starting the app.</strong><br>Please share this message with Claude to get it fixed:<br><br>'+
+   '<code style="word-break:break-word">'+String(err && err.stack ? err.stack : err).replace(/</g,"&lt;")+'</code></div>';
+}
+</script>
+</body>
+</html>
